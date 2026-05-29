@@ -1,0 +1,77 @@
+{
+    "appDescription": {
+        "message": "Tự động thả cảm xúc thông minh với AI phân tích nội dung"
+    },
+    "appName": {
+        "message": "Smart Auto Reaction for FB"
+    },
+    "appShortName": {
+        "message": "SmartAutoReaction"
+    },
+    "setting": {
+        "message": "Cài đặt"
+    },
+    "start_with_chrome": {
+        "message": "Khởi động cùng trình duyệt"
+    },
+    "ignore_fanpage": {
+        "message": "Bỏ qua fanpage"
+    },
+    "ignore_group": {
+        "message": "Bỏ qua nhóm"
+    },
+    "blacklist_uid": {
+        "message": "Danh sách đen UID"
+    },
+    "blacklist_placeholder": {
+        "message": "Sử dụng dấu phẩy (,) để phân cách nhiều UID"
+    },
+    "start": {
+        "message": "Bắt đầu"
+    },
+    "stop": {
+        "message": "Dừng"
+    },
+    "view_activity": {
+        "message": "Xem lịch sử"
+    },
+    "intro_text": {
+        "message": "Tự động thả cảm xúc thông minh trên Facebook với AI phân tích nội dung"
+    },
+    "pro_days_tip": {
+        "message": "Tất cả tính năng premium đã được mở khóa vĩnh viễn!"
+    },
+    "days": {
+        "message": "ngày"
+    },
+    "hours": {
+        "message": "giờ"
+    },
+    "minutes": {
+        "message": "phút"
+    },
+    "time_period_check_newsfeed": {
+        "message": "Khoảng thời gian kiểm tra news feed"
+    },
+    "tips_1": {
+        "message": "Mẹo: Mở ít nhất một tab Facebook để tránh checkpoint."
+    },
+    "content_filter": {
+        "message": "Bộ lọc nội dung"
+    },
+    "avoid_politics": {
+        "message": "Tránh nội dung chính trị"
+    },
+    "avoid_controversial": {
+        "message": "Tránh nội dung tranh cãi"
+    },
+    "avoid_ads": {
+        "message": "Tránh quảng cáo"
+    },
+    "reaction_type": {
+        "message": "Loại cảm xúc"
+    },
+    "auto_reaction": {
+        "message": "Tự động (Thông minh)"
+    }
+}

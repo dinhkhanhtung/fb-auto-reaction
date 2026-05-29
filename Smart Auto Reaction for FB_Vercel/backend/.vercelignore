@@ -1,0 +1,36 @@
+# Ignore development files
+.vercel
+.git
+.gitignore
+
+# Ignore test files
+test/
+tests/
+*.test.js
+*.spec.js
+
+# Ignore documentation
+README.md
+CHANGELOG.md
+
+# Ignore node modules during build
+node_modules/
+npm-debug.log*
+
+# Ignore temporary files
+.tmp/
+temp/
+*.tmp
+*.log
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Keep only essential files for deployment
+!package.json
+!server.js
+!vercel.json
+!public/

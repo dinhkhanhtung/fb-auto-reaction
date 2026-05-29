@@ -1,0 +1,77 @@
+{
+    "appDescription": {
+        "message": "Auto react to friend posts on FB with AI content analysis"
+    },
+    "appName": {
+        "message": "Smart Auto Reaction for FB"
+    },
+    "appShortName": {
+        "message": "SmartAutoReaction"
+    },
+    "setting": {
+        "message": "Settings"
+    },
+    "start_with_chrome": {
+        "message": "Startup with browser"
+    },
+    "ignore_fanpage": {
+        "message": "Ignore fanpage"
+    },
+    "ignore_group": {
+        "message": "Ignore group"
+    },
+    "blacklist_uid": {
+        "message": "Blacklist UID"
+    },
+    "blacklist_placeholder": {
+        "message": "Using commas (,) to separate multiple UIDs"
+    },
+    "start": {
+        "message": "Start"
+    },
+    "stop": {
+        "message": "Stop"
+    },
+    "view_activity": {
+        "message": "View activity log"
+    },
+    "intro_text": {
+        "message": "Automatically react to friend posts with smart AI content analysis"
+    },
+    "pro_days_tip": {
+        "message": "All premium features are unlocked forever!"
+    },
+    "days": {
+        "message": "days"
+    },
+    "hours": {
+        "message": "hours"
+    },
+    "minutes": {
+        "message": "minutes"
+    },
+    "time_period_check_newsfeed": {
+        "message": "Time period to check news feed"
+    },
+    "tips_1": {
+        "message": "Tips: Open at least one Facebook tab to avoid checkpoint."
+    },
+    "content_filter": {
+        "message": "Content Filter"
+    },
+    "avoid_politics": {
+        "message": "Avoid political content"
+    },
+    "avoid_controversial": {
+        "message": "Avoid controversial content"
+    },
+    "avoid_ads": {
+        "message": "Avoid advertisements"
+    },
+    "reaction_type": {
+        "message": "Reaction Type"
+    },
+    "auto_reaction": {
+        "message": "Auto (Smart)"
+    }
+}

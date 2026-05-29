@@ -1,0 +1,2316 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - FB Smart Engagement Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            color: #1c1e21;
+        }
+
+        /* Facebook Style Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f0f2f5;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #bcc0c4;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8a8d91;
+        }
+
+        /* Top Navigation Bar - Facebook Style */
+        .top-navbar {
+            background: #1877f2;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .navbar-brand i {
+            margin-right: 0.5rem;
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 0.5rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #fff, #feca57);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* Modern Sidebar */
+        .sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: calc(100vh - 80px);
+            position: sticky;
+            top: 80px;
+            box-shadow: 4px 0 20px rgba(102, 126, 234, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-title {
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.875rem;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            margin: 0.25rem 0;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            padding: 0.875rem 1.5rem;
+            border-radius: 0 25px 25px 0;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white !important;
+            transform: translateX(5px);
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 30px;
+            background: #fff;
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            background: #f8f9fa;
+            min-height: calc(100vh - 80px);
+            padding: 2rem;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            color: #2c3e50;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Chart Cards */
+        .chart-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 1px solid #dadde1;
+        }
+
+        .chart-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e9ecef;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .chart-title {
+            color: #2c3e50;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .chart-body {
+            padding: 2rem;
+        }
+
+        /* Data Tables */
+        .table-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid #dadde1;
+        }
+
+        .table-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e9ecef;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .table-title {
+            color: #2c3e50;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-action {
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary-custom:hover {
+            background: linear-gradient(45deg, #764ba2, #667eea);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-success-custom {
+            background: linear-gradient(45deg, #51cf66, #40c057);
+            color: white;
+        }
+
+        .btn-success-custom:hover {
+            background: linear-gradient(45deg, #40c057, #51cf66);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(64, 192, 87, 0.3);
+        }
+
+        .table-responsive {
+            padding: 2rem;
+        }
+
+        .table {
+            color: #495057;
+        }
+
+        .table thead th {
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            color: #495057;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+        }
+
+        .table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background: #f8f9fa;
+            transform: scale(1.01);
+        }
+
+        /* Status Badges */
+        .badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-success {
+            background: linear-gradient(45deg, #51cf66, #40c057);
+            color: white;
+        }
+
+        .badge-warning {
+            background: linear-gradient(45deg, #ffd43b, #fab005);
+            color: #212529;
+        }
+
+        .badge-danger {
+            background: linear-gradient(45deg, #ff6b6b, #fa5252);
+            color: white;
+        }
+
+        .badge-secondary {
+            background: linear-gradient(45deg, #868e96, #6c757d);
+            color: white;
+        }
+
+        /* Loading States */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e9ecef;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .top-navbar {
+                padding: 1rem;
+            }
+
+            .navbar-actions {
+                gap: 0.5rem;
+            }
+
+            .user-profile {
+                padding: 0.25rem 0.5rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .page-header {
+                padding: 1.5rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 280px;
+                z-index: 999;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+
+            .mobile-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 998;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .mobile-overlay.show {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+
+        /* Dark Mode Support */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #e9ecef;
+        }
+
+        body.dark-mode .main-content {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        body.dark-mode .page-header {
+            background: linear-gradient(135deg, #2d2d2d 0%, #3d3d3d 100%);
+            color: #e9ecef;
+        }
+
+        body.dark-mode .page-title {
+            color: #e9ecef;
+        }
+
+        body.dark-mode .chart-card {
+            background: linear-gradient(135deg, #2d2d2d 0%, #3d3d3d 100%);
+        }
+
+        body.dark-mode .table-card {
+            background: linear-gradient(135deg, #2d2d2d 0%, #3d3d3d 100%);
+        }
+
+        body.dark-mode .table {
+            color: #e9ecef;
+        }
+
+        body.dark-mode .table thead th {
+            background: #3d3d3d;
+            color: #e9ecef;
+            border-color: #4d4d4d;
+        }
+
+        body.dark-mode .table tbody td {
+            border-color: #4d4d4d;
+        }
+
+        body.dark-mode .table tbody tr:hover {
+            background: #3d3d3d;
+        }
+
+        /* Mobile Responsive Design */
+        @media (max-width: 768px) {
+
+            /* Top Navigation Mobile */
+            .top-navbar {
+                padding: 0.75rem 1rem;
+            }
+
+            .navbar-brand {
+                font-size: 1rem;
+            }
+
+            .navbar-actions {
+                gap: 0.5rem;
+            }
+
+            .user-profile span {
+                display: none;
+            }
+
+            /* Sidebar Mobile */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 280px;
+                height: 100vh;
+                z-index: 1000;
+                transition: left 0.3s ease;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+
+            .sidebar-header {
+                padding: 1rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .sidebar-title {
+                font-size: 1.1rem;
+                margin: 0;
+                color: white;
+            }
+
+            .sidebar-subtitle {
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 0.875rem;
+            }
+
+            .sidebar-nav {
+                padding: 1rem 0;
+            }
+
+            .sidebar-nav .nav-link {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+                color: rgba(255, 255, 255, 0.8);
+                transition: all 0.3s ease;
+            }
+
+            .sidebar-nav .nav-link:hover,
+            .sidebar-nav .nav-link.active {
+                color: white;
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .sidebar-nav .nav-link i {
+                margin-right: 0.5rem;
+            }
+
+            /* Main Content Mobile */
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+                margin-top: 60px;
+                /* Space for mobile menu toggle */
+            }
+
+            /* Stats Cards Mobile */
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .stat-card {
+                padding: 1.5rem;
+                border-radius: 15px;
+                text-align: center;
+            }
+
+            .stat-card .stat-number {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .stat-card .stat-label {
+                font-size: 0.9rem;
+                color: #666;
+            }
+
+            .page-header {
+                padding: 1rem 0;
+                margin-bottom: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
+            }
+
+            /* Tables Mobile */
+            .table-responsive {
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .table {
+                font-size: 0.85rem;
+                margin-bottom: 0;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.75rem 0.5rem;
+                vertical-align: middle;
+            }
+
+            .table th {
+                background: #f8f9fa;
+                font-weight: 600;
+                font-size: 0.8rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            /* Buttons Mobile */
+            .btn-group .btn {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.8rem;
+            }
+
+            .btn-action {
+                min-width: 35px;
+                height: 35px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Modals Mobile */
+            .modal-dialog {
+                margin: 1rem;
+                max-width: calc(100% - 2rem);
+            }
+
+            .modal-content {
+                border-radius: 15px;
+                border: none;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            }
+
+            .modal-header {
+                border-bottom: 1px solid #e9ecef;
+                padding: 1rem 1.5rem;
+            }
+
+            .modal-body {
+                padding: 1.5rem;
+            }
+
+            .modal-footer {
+                border-top: 1px solid #e9ecef;
+                padding: 1rem 1.5rem;
+            }
+
+            .page-subtitle {
+                font-size: 0.9rem;
+            }
+
+            /* Stats Cards Mobile */
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .stat-card {
+                padding: 1.5rem;
+                text-align: center;
+            }
+
+            .stat-icon {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .stat-label {
+                font-size: 0.9rem;
+            }
+
+            /* Charts Mobile */
+            .chart-card {
+                margin-bottom: 1.5rem;
+            }
+
+            .chart-header {
+                padding: 1rem;
+            }
+
+            .chart-title {
+                font-size: 1.1rem;
+            }
+
+            .chart-body {
+                padding: 1rem;
+            }
+
+            /* Tables Mobile */
+            .table-card {
+                margin-bottom: 1.5rem;
+                overflow-x: auto;
+            }
+
+            .table-header {
+                padding: 1rem;
+            }
+
+            .table-title {
+                font-size: 1.1rem;
+            }
+
+            .table-responsive {
+                font-size: 0.85rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.5rem;
+                white-space: nowrap;
+            }
+
+            .btn-action {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            /* Modal Mobile */
+            .modal-dialog {
+                margin: 0.5rem;
+                max-width: calc(100% - 1rem);
+            }
+
+            .modal-content {
+                border-radius: 0.5rem;
+            }
+
+            .modal-header {
+                padding: 1rem;
+            }
+
+            .modal-body {
+                padding: 1rem;
+            }
+
+            .modal-footer {
+                padding: 1rem;
+            }
+
+            /* Forms Mobile */
+            .form-control {
+                font-size: 16px;
+                /* Prevent zoom on iOS */
+                padding: 0.75rem;
+            }
+
+            .form-label {
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            /* Mobile Menu Toggle */
+            .mobile-menu-toggle {
+                display: block !important;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 1050;
+                background: #1877f2;
+                color: white;
+                border: none;
+                border-radius: 0.5rem;
+                padding: 0.75rem;
+                font-size: 1.2rem;
+                cursor: pointer;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
+            }
+
+            .mobile-menu-toggle:hover {
+                background: #166fe5;
+            }
+
+            /* Overlay for mobile sidebar */
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1040;
+                display: none;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+
+        /* Extra Small Mobile */
+        @media (max-width: 480px) {
+            .top-navbar {
+                padding: 0.5rem;
+            }
+
+            .navbar-brand {
+                font-size: 0.9rem;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .main-content {
+                padding: 0.5rem;
+                margin-top: 50px;
+            }
+
+            .page-title {
+                font-size: 1.3rem;
+            }
+
+            /* Stats Cards Extra Small */
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-card .stat-number {
+                font-size: 1.8rem;
+            }
+
+            .stat-card .stat-label {
+                font-size: 0.8rem;
+            }
+
+            /* Tables Extra Small */
+            .table {
+                font-size: 0.75rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.5rem 0.25rem;
+            }
+
+            .btn-action {
+                min-width: 30px;
+                height: 30px;
+                font-size: 0.7rem;
+            }
+
+            /* Modals Extra Small */
+            .modal-dialog {
+                margin: 0.5rem;
+                max-width: calc(100% - 1rem);
+            }
+
+            .modal-header,
+            .modal-body,
+            .modal-footer {
+                padding: 1rem;
+            }
+
+            /* Mobile Menu Toggle Extra Small */
+            .mobile-menu-toggle {
+                top: 0.75rem;
+                left: 0.75rem;
+                padding: 0.5rem;
+                font-size: 1rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.25rem;
+                font-size: 0.8rem;
+            }
+
+            .btn-action {
+                padding: 0.2rem 0.4rem;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- Top Navigation Bar -->
+    <nav class="top-navbar">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="navbar-brand">
+                    <i class="fas fa-robot"></i>
+                    FB Smart Engagement Pro
+                </div>
+                <div class="navbar-actions">
+                    <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                    <div class="user-profile" onclick="showUserMenu()">
+                        <div class="user-avatar">AD</div>
+                        <span>Admin</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar p-0">
+                <div class="sidebar-header">
+                    <h5 class="sidebar-title">Admin Panel</h5>
+                    <p class="sidebar-subtitle">Management Dashboard</p>
+                </div>
+                <nav class="sidebar-nav">
+                    <div class="nav-item">
+                        <a class="nav-link active" href="#dashboard" onclick="showSection('dashboard')">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a class="nav-link" href="#users" onclick="showSection('users')">
+                            <i class="fas fa-users"></i>
+                            Users
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a class="nav-link" href="#payments" onclick="showSection('payments')">
+                            <i class="fas fa-credit-card"></i>
+                            Payments
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a class="nav-link" href="#licenses" onclick="showSection('licenses')">
+                            <i class="fas fa-key"></i>
+                            Licenses
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a class="nav-link" href="#versions" onclick="showSection('versions')">
+                            <i class="fas fa-code-branch"></i>
+                            Versions
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a class="nav-link" href="#analytics" onclick="showSection('analytics')">
+                            <i class="fas fa-chart-line"></i>
+                            Analytics
+                        </a>
+                    </div>
+                    <hr style="border-color: rgba(255,255,255,0.1); margin: 1rem;">
+                    <div class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Logout
+                        </a>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10">
+                <div class="main-content">
+                    <!-- Dashboard Section -->
+                    <div id="dashboard-section">
+                        <div class="page-header fade-in-up">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h1 class="page-title">Dashboard Overview</h1>
+                                    <p class="page-subtitle">Welcome back! Here's what's happening with your
+                                        application.</p>
+                                </div>
+                                <div class="page-actions">
+                                    <button class="btn btn-primary-custom" onclick="refreshDashboard()">
+                                        <i class="fas fa-sync-alt me-2"></i>Refresh Data
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Stats Cards -->
+                        <div class="stats-grid fade-in-up">
+                            <div class="stat-card">
+                                <div class="text-center">
+                                    <i class="fas fa-users stat-icon"></i>
+                                    <div class="stat-value" id="total-users">0</div>
+                                    <div class="stat-label">Total Users</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="text-center">
+                                    <i class="fas fa-crown stat-icon"></i>
+                                    <div class="stat-value" id="pro-users">0</div>
+                                    <div class="stat-label">PRO Users</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="text-center">
+                                    <i class="fas fa-clock stat-icon"></i>
+                                    <div class="stat-value" id="trial-users">0</div>
+                                    <div class="stat-label">Trial Users</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="text-center">
+                                    <i class="fas fa-dollar-sign stat-icon"></i>
+                                    <div class="stat-value" id="revenue">0₫</div>
+                                    <div class="stat-label">Doanh thu</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="text-center">
+                                    <i class="fas fa-shopping-cart stat-icon"></i>
+                                    <div class="stat-value" id="total-orders">0</div>
+                                    <div class="stat-label">Đơn hàng</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="text-center">
+                                    <i class="fas fa-clock stat-icon"></i>
+                                    <div class="stat-value" id="pending-payments">0</div>
+                                    <div class="stat-label">Chờ xử lý</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Charts -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="chart-card fade-in-up">
+                                    <div class="chart-header">
+                                        <h5 class="chart-title">User Growth</h5>
+                                    </div>
+                                    <div class="chart-body">
+                                        <canvas id="userGrowthChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="chart-card fade-in-up">
+                                    <div class="chart-header">
+                                        <h5 class="chart-title">Plan Distribution</h5>
+                                    </div>
+                                    <div class="chart-body">
+                                        <canvas id="planChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Users Section -->
+                    <div id="users-section" style="display: none;">
+                        <div class="page-header fade-in-up">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h1 class="page-title">User Management</h1>
+                                    <p class="page-subtitle">Manage and monitor all registered users</p>
+                                </div>
+                                <div class="page-actions">
+                                    <button class="btn btn-primary-custom" onclick="refreshUsers()">
+                                        <i class="fas fa-sync-alt me-2"></i>Refresh
+                                    </button>
+                                    <button class="btn btn-success-custom" onclick="exportUsers()">
+                                        <i class="fas fa-download me-2"></i>Export
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-card fade-in-up">
+                            <div class="table-header">
+                                <h5 class="table-title">All Users</h5>
+                                <div class="table-actions">
+                                    <input type="text" class="form-control" placeholder="Search users..."
+                                        style="width: 250px;" onkeyup="filterUsers(this.value)">
+                                    <button class="btn btn-primary-custom" onclick="showUserFilters()">
+                                        <i class="fas fa-filter me-2"></i>Filter
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>User ID</th>
+                                            <th>Email</th>
+                                            <th>Device ID</th>
+                                            <th>Status</th>
+                                            <th>Plan</th>
+                                            <th>Last Active</th>
+                                            <th>Created</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="users-table">
+                                        <!-- Users will be loaded here -->
+                                    </tbody>
+                                </table>
+                                <div id="users-loading" class="loading" style="display: none;">
+                                    <div class="loading-spinner"></div>
+                                    Loading users...
+                                </div>
+                                <div id="users-empty" class="empty-state" style="display: none;">
+                                    <i class="fas fa-users empty-icon"></i>
+                                    <h4>No users found</h4>
+                                    <p>Start by registering your first user</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payments Section -->
+                    <div id="payments-section" style="display: none;">
+                        <h2 class="mb-4">Payment Management</h2>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Payment History</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Payment ID</th>
+                                                <th>User ID</th>
+                                                <th>Customer Info</th>
+                                                <th>Amount</th>
+                                                <th>Plan</th>
+                                                <th>Status</th>
+                                                <th>Date</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="payments-table">
+                                            <!-- Payments will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Versions Section -->
+                    <div id="versions-section" style="display: none;">
+                        <h2 class="mb-4">Version Management</h2>
+
+                        <!-- Current Version Info -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Current Version</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="version-info">
+                                            <h4 class="text-primary">v1.2.0</h4>
+                                            <p class="text-muted">Latest stable release</p>
+                                            <small class="text-success">
+                                                <i class="fas fa-check-circle"></i> Released: 2024-01-15
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="version-stats">
+                                            <div class="row text-center">
+                                                <div class="col-4">
+                                                    <div class="stat-item">
+                                                        <div class="stat-number text-primary">1,250</div>
+                                                        <small class="text-muted">Users Notified</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="stat-item">
+                                                        <div class="stat-number text-success">890</div>
+                                                        <small class="text-muted">Users Updated</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="stat-item">
+                                                        <div class="stat-number text-info">71.2%</div>
+                                                        <small class="text-muted">Update Rate</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Send Update Notification -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Send Update Notification</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="update-notification-form">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <label for="notification-version">Version</label>
+                                                <input type="text" class="form-control" id="notification-version"
+                                                    value="1.2.0" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <label for="notification-target">Target Users</label>
+                                                <select class="form-control" id="notification-target">
+                                                    <option value="all">All Users</option>
+                                                    <option value="pro">PRO Users Only</option>
+                                                    <option value="trial">Trial Users Only</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="notification-message">Message</label>
+                                        <textarea class="form-control" id="notification-message" rows="3"
+                                            placeholder="Enter update message...">🚀 Có phiên bản mới! Cập nhật để trải nghiệm tính năng mới:
+- Auto-activation system
+- Mobile responsive design
+- Bug fixes và performance improvements</textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane"></i> Send Notification
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Update History -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Update History</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Version</th>
+                                                <th>Title</th>
+                                                <th>Release Date</th>
+                                                <th>Users Notified</th>
+                                                <th>Users Updated</th>
+                                                <th>Update Rate</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="versions-table">
+                                            <!-- Versions will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Licenses Section -->
+                    <div id="licenses-section" style="display: none;">
+                        <h2 class="mb-4">License Management</h2>
+
+                        <!-- Auto-Activation Info -->
+                        <div class="alert alert-info mb-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Auto-Activation System:</strong> Licenses are automatically created and activated
+                            when payments are approved. Users receive PRO features immediately without manual steps.
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">All Licenses</h5>
+                                <small class="text-muted">Licenses are automatically created when payments are
+                                    approved</small>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>License Key</th>
+                                                <th>User ID</th>
+                                                <th>Plan</th>
+                                                <th>Status</th>
+                                                <th>Expires</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="licenses-table">
+                                            <!-- Licenses will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Section -->
+                    <div id="analytics-section" style="display: none;">
+                        <h2 class="mb-4">Analytics</h2>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Conversion Rate</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="conversionChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Revenue Trend</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="revenueChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Global functions - define them first
+            window.showSection = function (section) {
+                try {
+                    console.log('Switching to section:', section);
+
+                    // Hide all sections
+                    document.querySelectorAll('[id$="-section"]').forEach(el => {
+                        el.style.display = 'none';
+                    });
+
+                    // Show selected section
+                    const targetSection = document.getElementById(section + '-section');
+                    if (targetSection) {
+                        targetSection.style.display = 'block';
+                        console.log('Section displayed:', section);
+                    } else {
+                        console.error('Section not found:', section + '-section');
+                        return;
+                    }
+
+                    // Update nav links
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+
+                    // Find and activate the correct nav link
+                    const activeLink = document.querySelector(`[onclick="showSection('${section}')"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active');
+                    }
+
+                    currentSection = section;
+                    console.log('Navigation completed for:', section);
+
+                    // Reload data for specific sections
+                    if (section === 'users') {
+                        loadUsers();
+                    } else if (section === 'payments') {
+                        loadPayments();
+                    } else if (section === 'licenses') {
+                        loadLicenses();
+                    } else if (section === 'dashboard') {
+                        loadDashboard();
+                    }
+
+                } catch (error) {
+                    console.error('Navigation error:', error);
+                    showToast('Lỗi chuyển trang: ' + error.message, 'error');
+                }
+            };
+
+            // Make other functions global too
+            window.logout = function () {
+                localStorage.removeItem('adminToken');
+                window.location.href = '/admin';
+            };
+
+            window.approvePayment = async function (paymentId) {
+                try {
+                    console.log('Approving payment:', paymentId);
+                    const response = await fetch(`/api/admin/payments/${paymentId}/approve`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const data = await response.json();
+                    console.log('Approval response:', data);
+
+                    if (data.success) {
+                        showToast('Payment đã được duyệt thành công!', 'success');
+                        loadPayments(); // Reload payments
+                        loadUsers(); // Reload users
+                        loadDashboard(); // Reload dashboard
+                    } else {
+                        showToast('Lỗi duyệt payment: ' + data.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error approving payment:', error);
+                    showToast('Lỗi kết nối: ' + error.message, 'error');
+                }
+            };
+
+            window.viewUser = function (userId) {
+                console.log('viewUser called with:', userId);
+            };
+
+            window.editUser = function (userId) {
+                console.log('editUser called with:', userId);
+            };
+
+            window.createLicenseForUser = function (userId) {
+                console.log('createLicenseForUser called with:', userId);
+            };
+
+            window.viewPayment = function (paymentId) {
+                console.log('viewPayment called with:', paymentId);
+            };
+
+            // Check authentication with better persistence
+            let token = localStorage.getItem('adminToken');
+            console.log('Initial token from localStorage:', token);
+
+            // Get token from URL if available (for login redirect)
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlToken = urlParams.get('token');
+            if (urlToken) {
+                console.log('Token from URL:', urlToken);
+                token = urlToken;
+                localStorage.setItem('adminToken', token);
+                // Clean URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
+            // If no token, redirect to login
+            if (!token) {
+                console.log('No token found, redirecting to login');
+                window.location.href = '/admin';
+            }
+
+            // Verify token is still valid
+            async function verifyToken() {
+                try {
+                    const response = await fetch('/api/admin/analytics', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.status === 401) {
+                        console.log('Token expired, redirecting to login');
+                        localStorage.removeItem('adminToken');
+                        window.location.href = '/admin';
+                        return false;
+                    }
+                    return true;
+                } catch (error) {
+                    console.error('Token verification error:', error);
+                    return false;
+                }
+            }
+
+            // Global variables
+            let currentSection = 'dashboard';
+            let users = [];
+            let payments = [];
+            let licenses = [];
+
+            // Logout function
+            function logout() {
+                localStorage.removeItem('adminToken');
+                window.location.href = '/admin';
+            }
+
+            // Auto-refresh token every 10 minutes to prevent timeout
+            setInterval(async () => {
+                try {
+                    const response = await fetch('/api/admin/analytics', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.status === 401) {
+                        console.log('Token expired during auto-refresh, redirecting to login');
+                        localStorage.removeItem('adminToken');
+                        window.location.href = '/admin';
+                    }
+                } catch (error) {
+                    console.error('Auto-refresh token error:', error);
+                }
+            }, 10 * 60 * 1000); // 10 minutes
+
+            // Handle page visibility change (when user comes back to tab)
+            document.addEventListener('visibilitychange', async function () {
+                if (!document.hidden && token) {
+                    console.log('Page became visible, checking token validity');
+                    const isValid = await verifyToken();
+                    if (!isValid) {
+                        return; // Will redirect to login
+                    }
+                }
+            });
+
+            // Initialize dashboard with token verification
+            document.addEventListener('DOMContentLoaded', async function () {
+                console.log('DOM Content Loaded');
+
+                // Verify token first
+                const isValid = await verifyToken();
+                if (!isValid) {
+                    return; // Will redirect to login
+                }
+
+                // Test navigation elements
+                console.log('Testing navigation elements...');
+                const navLinks = document.querySelectorAll('.nav-link');
+                console.log('Found nav links:', navLinks.length);
+
+                // Load dashboard data
+                loadDashboard();
+                loadUsers();
+                loadPayments();
+                loadLicenses();
+
+                console.log('Dashboard initialization completed');
+            });
+
+
+            // Dashboard functions
+            async function loadDashboard() {
+                try {
+                    console.log('Loading dashboard with token:', token);
+
+                    // Add timeout to prevent hanging
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+                    const response = await fetch('/api/admin/analytics', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                        signal: controller.signal
+                    });
+
+                    clearTimeout(timeoutId);
+                    console.log('Dashboard response status:', response.status);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Dashboard response data:', data);
+
+                    if (data.success) {
+                        document.getElementById('total-users').textContent = data.analytics.total_users || 0;
+                        document.getElementById('pro-users').textContent = data.analytics.pro_users || 0;
+                        document.getElementById('trial-users').textContent = data.analytics.trial_users || 0;
+
+                        // Calculate revenue (simplified)
+                        const revenue = (data.analytics.monthly_users * 4.99) + (data.analytics.yearly_users * 39.99);
+                        document.getElementById('revenue').textContent = '$' + revenue.toFixed(2);
+                    } else {
+                        console.error('Dashboard API error:', data.error);
+                        showToast('Lỗi tải dashboard: ' + data.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error loading dashboard:', error);
+                    if (error.name === 'AbortError') {
+                        showToast('Timeout: Không thể tải dashboard. Vui lòng thử lại.', 'error');
+                    } else {
+                        showToast('Lỗi kết nối dashboard: ' + error.message, 'error');
+                    }
+                }
+            }
+
+            // Users functions
+            async function loadUsers() {
+                try {
+                    console.log('Loading users with token:', token);
+
+                    // Add timeout to prevent hanging
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+                    const response = await fetch('/api/admin/users', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                        signal: controller.signal
+                    });
+
+                    clearTimeout(timeoutId);
+                    console.log('Users response status:', response.status);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Users response data:', data);
+
+                    if (data.success) {
+                        users = data.users || [];
+                        console.log('Loaded users:', users.length);
+                        renderUsersTable();
+                    } else {
+                        console.error('Users API error:', data.error);
+                        showToast('Lỗi tải users: ' + data.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error loading users:', error);
+                    if (error.name === 'AbortError') {
+                        showToast('Timeout: Không thể tải users. Vui lòng thử lại.', 'error');
+                    } else {
+                        showToast('Lỗi kết nối users: ' + error.message, 'error');
+                    }
+                }
+            }
+
+            function renderUsersTable() {
+                const tbody = document.getElementById('users-table');
+                tbody.innerHTML = '';
+
+                users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                    <td>${user.user_id}</td>
+                    <td>${user.email || 'N/A'}</td>
+                    <td>
+                        <span class="badge ${user.is_pro ? 'bg-success' : user.is_trial ? 'bg-warning' : 'bg-secondary'}">
+                            ${user.is_pro ? 'PRO' : user.is_trial ? 'Trial' : 'Free'}
+                        </span>
+                    </td>
+                    <td>${user.plan || 'N/A'}</td>
+                    <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary btn-action" onclick="viewUser('${user.user_id}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-warning btn-action" onclick="editUser('${user.user_id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            // Payment functions
+            async function loadPayments() {
+                try {
+                    console.log('Loading payments with token:', token);
+                    const response = await fetch('/api/admin/payments', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    console.log('Payments response status:', response.status);
+                    const data = await response.json();
+                    console.log('Payments response data:', data);
+
+                    if (data.success) {
+                        payments = data.payments || [];
+                        console.log('Loaded payments:', payments.length);
+                        renderPaymentsTable();
+                    } else {
+                        console.error('Payments API error:', data.error);
+                        showToast('Lỗi tải payments: ' + data.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error loading payments:', error);
+                    showToast('Lỗi kết nối payments: ' + error.message, 'error');
+                }
+            }
+
+            function renderPaymentsTable() {
+                const tbody = document.getElementById('payments-table');
+                tbody.innerHTML = '';
+
+                console.log('Rendering payments table with', payments.length, 'payments');
+
+                if (payments.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" class="text-center">Không có payment nào</td></tr>';
+                    return;
+                }
+
+                payments.forEach(payment => {
+                    console.log('Rendering payment:', payment);
+                    const row = document.createElement('tr');
+
+                    // Extract customer info from bank_info
+                    let customerInfo = 'N/A';
+                    if (payment.bank_info) {
+                        try {
+                            const bankInfo = typeof payment.bank_info === 'string' ? JSON.parse(payment.bank_info) : payment.bank_info;
+                            customerInfo = `${bankInfo.name || 'N/A'}<br><small>${bankInfo.email || 'N/A'}</small>`;
+                        } catch (error) {
+                            console.error('Error parsing bank_info:', error);
+                            customerInfo = payment.bank_info || 'N/A';
+                        }
+                    }
+
+                    row.innerHTML = `
+                    <td><strong>${payment.paymentId || payment.id}</strong></td>
+                    <td>${payment.user_id}</td>
+                    <td>${customerInfo}</td>
+                    <td><span class="badge badge-info">${payment.amount.toLocaleString()}₫</span></td>
+                    <td><span class="badge badge-secondary">${payment.plan}</span></td>
+                    <td>
+                        <span class="badge ${payment.status === 'completed' ? 'badge-success' : payment.status === 'pending' ? 'badge-warning' : 'badge-danger'}">
+                            ${payment.status}
+                        </span>
+                    </td>
+                    <td><small>${new Date(payment.created_at).toLocaleDateString()}</small></td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-sm btn-primary btn-action" onclick="viewPayment('${payment.id}')" title="Xem chi tiết">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-success btn-action" onclick="approvePayment('${payment.id}')" title="Duyệt payment" style="background: linear-gradient(45deg, #28a745, #20c997);">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            // Payment approval function
+            async function approvePayment(paymentId) {
+                try {
+                    console.log('Approving payment:', paymentId);
+                    const response = await fetch(`/api/admin/payments/${paymentId}/approve`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const data = await response.json();
+                    console.log('Approval response:', data);
+
+                    if (data.success) {
+                        showToast('Payment đã được duyệt thành công!', 'success');
+                        loadPayments(); // Reload payments
+                        loadUsers(); // Reload users
+                        loadDashboard(); // Reload dashboard
+                    } else {
+                        showToast('Lỗi duyệt payment: ' + data.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error approving payment:', error);
+                    showToast('Lỗi kết nối: ' + error.message, 'error');
+                }
+            }
+
+            // License functions
+            async function loadLicenses() {
+                try {
+                    const response = await fetch('/api/admin/licenses', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        licenses = data.licenses;
+                        renderLicensesTable();
+                    }
+                } catch (error) {
+                    console.error('Error loading licenses:', error);
+                }
+            }
+
+            function renderLicensesTable() {
+                const tbody = document.getElementById('licenses-table');
+                tbody.innerHTML = '';
+
+                licenses.forEach(license => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                    <td><code>${license.license_key}</code></td>
+                    <td>${license.user_id}</td>
+                    <td>${license.plan}</td>
+                    <td>
+                        <span class="badge ${license.status === 'active' ? 'bg-success' : 'bg-danger'}">
+                            ${license.status}
+                        </span>
+                    </td>
+                    <td>${new Date(license.expires_at).toLocaleDateString()}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning btn-action" onclick="editLicense('${license.id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger btn-action" onclick="deactivateLicense('${license.id}')">
+                            <i class="fas fa-ban"></i>
+                        </button>
+                    </td>
+                `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            // Enhanced Action functions
+            function refreshUsers() {
+                showLoadingState('users');
+                loadUsers();
+                showToast('Users data refreshed!', 'success');
+            }
+
+            function refreshDashboard() {
+                loadDashboard();
+                showToast('Dashboard data refreshed!', 'success');
+            }
+
+            function exportUsers() {
+                // Export users data to CSV
+                if (users.length === 0) {
+                    showToast('No users to export', 'warning');
+                    return;
+                }
+
+                const csvContent = convertToCSV(users);
+                downloadCSV(csvContent, 'users_export.csv');
+                showToast('Users data exported successfully!', 'success');
+            }
+
+            function filterUsers(query) {
+                const filteredUsers = users.filter(user =>
+                    user.user_id.toLowerCase().includes(query.toLowerCase()) ||
+                    (user.email && user.email.toLowerCase().includes(query.toLowerCase()))
+                );
+
+                renderFilteredUsersTable(filteredUsers);
+
+                // Show empty state if no results
+                const tbody = document.getElementById('users-table');
+                if (filteredUsers.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4"><i class="fas fa-search fa-2x text-muted mb-3"></i><p class="text-muted">No users match your search</p></td></tr>';
+                }
+            }
+
+            function showUserFilters() {
+                showToast('User filters modal opened', 'info');
+            }
+
+            function renderFilteredUsersTable(filteredUsers) {
+                const tbody = document.getElementById('users-table');
+                tbody.innerHTML = '';
+
+                filteredUsers.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                    <td><strong>${user.user_id}</strong></td>
+                    <td>${user.email || 'N/A'}</td>
+                    <td><small>${user.device_id || 'N/A'}</small></td>
+                    <td>
+                        <span class="badge ${user.is_pro ? 'badge-success' : user.is_trial ? 'badge-warning' : 'badge-secondary'}">
+                            ${user.is_pro ? 'PRO' : user.is_trial ? 'Trial' : 'Free'}
+                        </span>
+                    </td>
+                    <td><span class="badge badge-info">${user.plan || 'N/A'}</span></td>
+                    <td><small>${user.last_active ? new Date(user.last_active).toLocaleDateString() : 'Never'}</small></td>
+                    <td><small>${new Date(user.created_at).toLocaleDateString()}</small></td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-sm btn-primary-custom btn-action" onclick="viewUser('${user.user_id}')" title="Xem chi tiết">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-warning btn-action" onclick="editUser('${user.user_id}')" title="Chỉnh sửa" style="background: linear-gradient(45deg, #ffd43b, #fab005); color: #212529;">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-success btn-action" onclick="createLicenseForUser('${user.user_id}')" title="Tạo license">
+                                <i class="fas fa-key"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            function showLoadingState(section) {
+                const loadingEl = document.getElementById(`${section}-loading`);
+                const emptyEl = document.getElementById(`${section}-empty`);
+
+                if (loadingEl) loadingEl.style.display = 'flex';
+                if (emptyEl) emptyEl.style.display = 'none';
+            }
+
+            function hideLoadingState(section) {
+                const loadingEl = document.getElementById(`${section}-loading`);
+                if (loadingEl) loadingEl.style.display = 'none';
+            }
+
+            function showEmptyState(section) {
+                const emptyEl = document.getElementById(`${section}-empty`);
+                if (emptyEl) emptyEl.style.display = 'block';
+            }
+
+            function convertToCSV(data) {
+                const headers = ['User ID', 'Email', 'Status', 'Plan', 'Created At'];
+                const csvArray = [headers];
+
+                data.forEach(user => {
+                    csvArray.push([
+                        user.user_id,
+                        user.email || 'N/A',
+                        user.is_pro ? 'PRO' : user.is_trial ? 'Trial' : 'Free',
+                        user.plan || 'N/A',
+                        new Date(user.created_at).toLocaleDateString()
+                    ]);
+                });
+
+                return csvArray.map(row => row.map(field => `"${field}"`).join(',')).join('\n');
+            }
+
+            function downloadCSV(content, filename) {
+                const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename);
+                link.style.visibility = 'hidden';
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            function viewUser(userId) {
+                // Show user details modal
+                showToast(`Viewing user: ${userId}`, 'info');
+            }
+
+            function editUser(userId) {
+                // Show edit user modal
+                showToast(`Editing user: ${userId}`, 'info');
+            }
+
+            function viewPayment(paymentId) {
+                // Show payment details modal
+                showToast(`Viewing payment: ${paymentId}`, 'info');
+            }
+
+
+            function createLicenseForUser(userId) {
+                const plan = prompt('Nhập plan cho user (pro_monthly/pro_yearly):', 'pro_monthly');
+                if (plan && (plan === 'pro_monthly' || plan === 'pro_yearly')) {
+                    const expires = prompt('Nhập ngày hết hạn (YYYY-MM-DD):', new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
+                    if (expires) {
+                        fetch('/api/licenses/admin/create', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                            },
+                            body: JSON.stringify({
+                                userId: userId,
+                                plan: plan,
+                                expires: expires
+                            })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    showToast(`License tạo thành công: ${data.licenseKey}`, 'success');
+                                    loadUsers();
+                                } else {
+                                    showToast('Lỗi tạo license: ' + data.error, 'error');
+                                }
+                            })
+                            .catch(error => {
+                                showToast('Lỗi kết nối: ' + error.message, 'error');
+                            });
+                    }
+                }
+            }
+
+            function editLicense(licenseId) {
+                // Show edit license modal
+                showToast(`Editing license: ${licenseId}`, 'info');
+            }
+
+            function deactivateLicense(licenseId) {
+                if (confirm('Are you sure you want to deactivate this license?')) {
+                    showToast('License deactivated: ' + licenseId, 'warning');
+                    loadLicenses();
+                }
+            }
+
+            // Dark Mode Toggle
+            function toggleTheme() {
+                const body = document.body;
+                const themeIcon = document.querySelector('.theme-toggle i');
+
+                if (body.classList.contains('dark-mode')) {
+                    body.classList.remove('dark-mode');
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    body.classList.add('dark-mode');
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                    localStorage.setItem('theme', 'dark');
+                }
+            }
+
+            // Load saved theme
+            function loadTheme() {
+                const savedTheme = localStorage.getItem('theme');
+                const themeIcon = document.querySelector('.theme-toggle i');
+
+                if (savedTheme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                }
+            }
+
+            // User Menu
+            function showUserMenu() {
+                // Show user dropdown menu
+                showToast('User menu clicked', 'info');
+            }
+
+            // Toast Notifications
+            function showToast(message, type = 'info') {
+                const toast = document.createElement('div');
+                toast.className = `alert alert-${type} position-fixed fade-in-up`;
+                toast.style.cssText = `
+                top: 100px;
+                right: 20px;
+                z-index: 9999;
+                min-width: 300px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                border: none;
+                border-radius: 10px;
+            `;
+
+                const iconMap = {
+                    'success': 'fa-check-circle',
+                    'error': 'fa-exclamation-circle',
+                    'warning': 'fa-exclamation-triangle',
+                    'info': 'fa-info-circle'
+                };
+
+                toast.innerHTML = `
+                <i class="fas ${iconMap[type]} me-2"></i>${message}
+                <button type="button" class="btn-close" onclick="this.parentElement.remove()" style="float: right; margin-top: -3px;"></button>
+            `;
+
+                document.body.appendChild(toast);
+
+                // Auto remove after 3 seconds
+                setTimeout(() => {
+                    if (toast.parentElement) {
+                        toast.remove();
+                    }
+                }, 3000);
+            }
+
+            // Mobile sidebar toggle
+            function toggleSidebar() {
+                const sidebar = document.querySelector('.sidebar');
+                const overlay = document.querySelector('.sidebar-overlay');
+
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.toggle('show');
+                    overlay.classList.toggle('show');
+                }
+            }
+
+            // Close sidebar function
+            function closeSidebar() {
+                const sidebar = document.querySelector('.sidebar');
+                const overlay = document.querySelector('.sidebar-overlay');
+
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+            }
+
+            // Initialize theme and mobile handlers
+            document.addEventListener('DOMContentLoaded', function () {
+                loadTheme();
+                loadDashboard();
+                loadUsers();
+                loadPayments();
+                loadLicenses();
+
+                // Add mobile overlay if doesn't exist
+                if (!document.querySelector('.sidebar-overlay')) {
+                    const overlay = document.createElement('div');
+                    overlay.className = 'sidebar-overlay';
+                    overlay.onclick = closeSidebar;
+                    document.body.appendChild(overlay);
+                }
+
+                // Handle window resize
+                window.addEventListener('resize', function () {
+                    if (window.innerWidth > 768) {
+                        closeSidebar();
+                    }
+                });
+            });
+
+            // Close sidebar when clicking on nav links
+            document.addEventListener('click', function (e) {
+                if (e.target.closest('.sidebar-nav .nav-link')) {
+                    closeSidebar();
+                }
+            });
+        </script>
+</body>
+
+</html>

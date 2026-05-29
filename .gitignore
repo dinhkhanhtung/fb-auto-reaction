@@ -1,0 +1,14 @@
+# Ignore zip files
+Smart Auto Reaction for FB.zip
+
+# Python caches and local files
+fb_tokens.json
+*.pyc
+__pycache__/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Gemini data
+.gemini/

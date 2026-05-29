@@ -1,0 +1,44 @@
+{
+    "manifest_version": 3,
+    "name": "__MSG_appName__",
+    "version": "2.0.0",
+    "default_locale": "en",
+    "description": "__MSG_appDescription__",
+    "icons": {
+        "16": "ic/ic16.png",
+        "32": "ic/ic32.png",
+        "48": "ic/ic48.png",
+        "128": "ic/ic128.png"
+    },
+    "action": {
+        "default_icon": "ic/ic128.png",
+        "default_title": "__MSG_appName__",
+        "default_popup": "popup.html"
+    },
+    "author": "Lzdev Enhanced",
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.facebook.com/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_idle"
+        }
+    ],
+    "permissions": [
+        "alarms",
+        "storage",
+        "activeTab",
+        "scripting"
+    ],
+    "host_permissions": [
+        "*://*.facebook.com/*"
+    ],
+    "homepage_url": "https://lzdev.org/",
+    "short_name": "__MSG_appShortName__"
+}
