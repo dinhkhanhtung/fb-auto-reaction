@@ -342,6 +342,18 @@ async function runSmartScan() {
         return;
     }
 
+    // Kiểm tra URL: Chỉ chạy trên News Feed, Groups, Pages hoặc Profiles bạn bè.
+    // CẤM chạy trên các trang quản trị hệ thống như Nhật ký hoạt động, Tin nhắn, Cài đặt...
+    const url = window.location.href;
+    const pathname = window.location.pathname;
+    const forbiddenPaths = ['/allactivity', '/messages', '/settings', '/adsmanager', '/gaming', '/saved', '/memories', '/buddylist'];
+    const isForbidden = forbiddenPaths.some(path => pathname.includes(path)) || url.includes('allactivity') || url.includes('messenger.com');
+
+    if (isForbidden) {
+        log('warn', 'Extension is not allowed to run on Facebook system/activity pages. Skipping scan.');
+        return;
+    }
+
     isScanRunning = true;
     lastScanTime = Date.now();
     let processedCount = 0, reactedCount = 0, skippedCount = 0, limitedCount = 0;
