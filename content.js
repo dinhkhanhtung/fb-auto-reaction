@@ -431,6 +431,46 @@ async function runSmartScan() {
                 }
             }
             
+            // BƯỚC 1: Lọc theo cấu trúc DOM. Nếu article này nằm trong một article khác, nó CÓ THỂ là comment hoặc bài share.
+            // Để an toàn, chúng ta bỏ qua các article bị lồng (nested).
+            let parent = art.parentElement;
+            let isNested = false;
+            while (parent) {
+                if (parent.getAttribute('role') === 'article') {
+                    isNested = true;
+                    break;
+                }
+                parent = parent.parentElement;
+            }
+            if (isNested) return false;
+
+            // BƯỚC 2: Kiểm tra nút Phản hồi (đặc trưng 100% của comment). Nếu có, loại bỏ ngay.
+            const isComment = Array.from(art.querySelectorAll('[role="button"], button, a')).some(btn => {
+                const btnText = (btn.textContent || '').toLowerCase().trim();
+                return btnText === 'phản hồi' || btnText === 'reply';
+            });
+            if (isComment) return false;
+
+            // BƯỚC 3: Kiểm tra nút Action. Tránh nhầm lẫn với nút tùy chọn của comment (Tùy chọn bình luận)
+            // Dùng includes() để hỗ trợ các giao diện gộp số lượng (vd: "5 bình luận")
+            const hasActionButtons = Array.from(art.querySelectorAll('[role="button"], button')).some(btn => {
+                const btnText = (btn.textContent || '').toLowerCase().trim();
+                const btnLabel = (btn.getAttribute('aria-label') || '').toLowerCase().trim();
+                
+                if (btnLabel.includes('tùy chọn') || btnLabel.includes('option') || btnLabel.includes('hành động')) {
+                    return false;
+                }
+                
+                return btnText.includes('chia sẻ') || btnText.includes('share') || 
+                       btnText.includes('bình luận') || btnText.includes('comment') ||
+                       btnLabel.includes('chia sẻ') || btnLabel.includes('share') ||
+                       btnLabel.includes('bình luận') || btnLabel.includes('comment');
+            });
+            
+            if (!hasActionButtons) {
+                return false;
+            }
+
             return true;
         });
         
@@ -554,12 +594,14 @@ async function runSmartScan() {
                 const likeBtn = findLikeButton(article);
                 if (!likeBtn) {
                     log('warn', 'Like button not found for this post');
+                    await addActivityLog('error', textContent || 'N/A (Lỗi không tìm thấy nút Like)', '');
                     skippedCount++;
                     continue;
                 }
 
                 if (likeBtn === 'already_reacted') {
                     processedPostIds.add(postId);
+                    await addActivityLog('skipped', textContent || 'N/A (Đã bày tỏ cảm xúc trước đó)', '');
                     skippedCount++;
                     continue;
                 }
@@ -575,6 +617,7 @@ async function runSmartScan() {
                     
                     if (rect.top < 0 || rect.bottom > window.innerHeight) {
                         log('warn', 'Post still not visible after scroll, skipping');
+                        await addActivityLog('skipped', textContent || 'N/A (Bài viết bị khuất)', '');
                         skippedCount++;
                         continue;
                     }
@@ -640,82 +683,116 @@ function findLikeButton(article) {
         return null;
     }
 
-    const toolbarCount = article.querySelectorAll('[role="toolbar"]').length;
-    const buttonCount = article.querySelectorAll('button').length;
-    const interactiveCount = article.querySelectorAll('[role="button"], button, [role="menuitem"]').length;
-    
-    log('info', `Article structure: ${toolbarCount} toolbars, ${buttonCount} buttons, ${interactiveCount} interactive elements`);
+    const interactiveElements = Array.from(article.querySelectorAll('[role="button"], button'));
 
-    // Lọc bỏ các button nằm trong comment con (các comment con có role="article") của bài viết này
-    const allButtonsInArticle = Array.from(article.querySelectorAll('button, [role="button"]')).filter(btn => {
+    // BƯỚC 1: Tìm Action Bar của bài viết chính dựa vào nút "Bình luận" hoặc "Chia sẻ"
+    const anchorBtn = interactiveElements.find(btn => {
+        const text = (btn.textContent || '').toLowerCase().trim();
+        const label = (btn.getAttribute('aria-label') || '').toLowerCase().trim();
+        return text === 'chia sẻ' || text === 'share' || text === 'bình luận' || text === 'comment' ||
+               label === 'chia sẻ' || label === 'share' || label === 'bình luận' || label === 'comment';
+    });
+
+    if (anchorBtn) {
+        // Tìm container chứa các nút hành động (thường cách 1-6 cấp)
+        let parent = anchorBtn.parentElement;
+        let depth = 0;
+        let actionBar = null;
+        
+        while (parent && depth < 6 && parent !== article) {
+            // Kiểm tra xem parent này có chứa ít nhất 2 nút không (thường là Like, Comment, Share)
+            const btns = Array.from(parent.querySelectorAll('[role="button"], button'));
+            if (btns.length >= 2 && btns.length <= 15 && btns.includes(anchorBtn)) {
+                actionBar = parent;
+                break;
+            }
+            parent = parent.parentElement;
+            depth++;
+        }
+
+        if (actionBar) {
+            const allActionBarBtns = Array.from(actionBar.querySelectorAll('[role="button"], button'));
+            
+            // 1. Kiểm tra xem đã like chưa
+            const isReacted = allActionBarBtns.some(b => {
+                const l = (b.getAttribute('aria-label') || '').trim();
+                const t = (b.textContent || '').trim();
+                return l === 'Gỡ Thích' || l === 'Unlike' || l.startsWith('Gỡ ') || l.startsWith('Remove ') || t === 'Gỡ Thích' || t === 'Unlike';
+            });
+            
+            if (isReacted) {
+                log('info', 'Post already has reaction (detected in action bar)');
+                return 'already_reacted';
+            }
+            
+            // 2. Tìm nút Like bằng text
+            let likeBtn = allActionBarBtns.find(b => {
+                const l = (b.getAttribute('aria-label') || '').toLowerCase().trim();
+                const t = (b.textContent || '').toLowerCase().trim();
+                return l === 'thích' || l === 'like' || t === 'thích' || t === 'like';
+            });
+            
+            // 3. Fallback: lấy nút đứng ngay trước nút Bình luận/Chia sẻ
+            if (!likeBtn) {
+                const anchorIndex = allActionBarBtns.indexOf(anchorBtn);
+                if (anchorIndex > 0) {
+                    likeBtn = allActionBarBtns[anchorIndex - 1]; 
+                } else if (allActionBarBtns.length > 0) {
+                    likeBtn = allActionBarBtns[0];
+                }
+            }
+            
+            if (likeBtn) {
+                log('success', 'Found primary like button via anchor');
+                return likeBtn;
+            }
+        }
+    }
+
+    // NẾU KHÔNG TÌM THẤY QUA ANCHOR, dùng fallback cũ
+    const allButtonsInArticle = interactiveElements.filter(btn => {
         let parent = btn.parentElement;
         while (parent && parent !== article) {
-            if (parent.getAttribute('role') === 'article') {
-                return false; // Button này thuộc về một comment con, bỏ qua!
+            if (parent.getAttribute('role') === 'article' || parent.getAttribute('role') === 'complementary') {
+                return false; 
             }
             parent = parent.parentElement;
         }
         return true;
     });
 
-    // 1. Kiểm tra xem bài viết chính đã được react chưa
     for (const btn of allButtonsInArticle) {
-        const label = btn.getAttribute('aria-label') || '';
+        const label = (btn.getAttribute('aria-label') || '').trim();
+        const text = (btn.textContent || '').trim();
         if (
-            label === 'Gỡ Thích' || 
-            label === 'Unlike' || 
-            label.startsWith('Gỡ ') || 
-            label.startsWith('Remove ') ||
-            label.includes('Press Enter to remove')
+            label === 'Gỡ Thích' || label === 'Unlike' || 
+            label.startsWith('Gỡ ') || label.startsWith('Remove ') ||
+            label.includes('Press Enter to remove') ||
+            text === 'Gỡ Thích' || text === 'Unlike'
         ) {
-            log('info', 'Post already has reaction, skipping: ' + label);
+            log('info', 'Post already has reaction, skipping: ' + (label || text));
             return 'already_reacted';
         }
     }
 
-    // 2. Tìm nút Like của bài viết chính (chỉ tìm trong allButtonsInArticle đã lọc sạch)
-    // Ưu tiên nút có aria-label là "Thích" hoặc "Like"
     let likeBtn = allButtonsInArticle.find(btn => {
-        const label = btn.getAttribute('aria-label') || '';
-        return label === 'Thích' || label === 'Like';
+        const label = (btn.getAttribute('aria-label') || '').trim();
+        const text = (btn.textContent || '').trim();
+        return label === 'Thích' || label === 'Like' || text === 'Thích' || text === 'Like';
     });
 
-    if (likeBtn) {
-        log('success', 'Found primary like button');
-        return likeBtn;
-    }
+    if (likeBtn) return likeBtn;
 
-    // Fallback: Tìm nút có aria-label chứa "Thích" hoặc "Like"
     likeBtn = allButtonsInArticle.find(btn => {
         const label = (btn.getAttribute('aria-label') || '').toLowerCase();
-        return label.includes('thích') || label.includes('like');
+        const text = (btn.textContent || '').toLowerCase();
+        return label.includes('thích') || label.includes('like') || text.includes('thích') || text.includes('like');
     });
 
-    if (likeBtn) {
-        log('success', 'Found primary like button (fuzzy match)');
-        return likeBtn;
-    }
-
-    // Last resort: chọn button đầu tiên trong toolbar chính của bài viết
-    const toolbars = Array.from(article.querySelectorAll('[role="toolbar"]')).filter(tb => {
-        let parent = tb.parentElement;
-        while (parent && parent !== article) {
-            if (parent.getAttribute('role') === 'article') return false;
-            parent = parent.parentElement;
-        }
-        return true;
-    });
-
-    if (toolbars.length > 0) {
-        const firstBtn = toolbars[0].querySelector('button, [role="button"]');
-        if (firstBtn) {
-            log('success', 'Found like button from main toolbar fallback');
-            return firstBtn;
-        }
-    }
+    if (likeBtn) return likeBtn;
 
     // Error: Could not find like button
-    log('error', 'Like button not found!', `Toolbars: ${toolbarCount}, Buttons: ${buttonCount}, Interactive: ${interactiveCount}`);
+    log('error', 'Like button not found!');
     return null;
 }
 
